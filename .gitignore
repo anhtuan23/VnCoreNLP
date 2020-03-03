@@ -1,2 +1,4 @@
 /.idea/
 /VnCoreNLP.iml
+/target/
+/dependency-reduced-pom.xml
