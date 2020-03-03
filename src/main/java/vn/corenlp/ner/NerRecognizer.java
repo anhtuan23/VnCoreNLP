@@ -2,7 +2,6 @@ package vn.corenlp.ner;
 
 import edu.emory.mathcs.nlp.common.util.NLPUtils;
 import edu.emory.mathcs.nlp.component.template.NLPComponent;
-
 import edu.emory.mathcs.nlp.component.template.lexicon.GlobalLexica;
 import edu.emory.mathcs.nlp.component.template.node.FeatMap;
 import edu.emory.mathcs.nlp.component.template.node.NLPNode;
@@ -12,10 +11,12 @@ import vn.corenlp.wordsegmenter.Vocabulary;
 import vn.pipeline.LexicalInitializer;
 import vn.pipeline.Word;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static vn.Utils.getResourceStream;
 
 public class NerRecognizer {
     private NLPDecoder nlpDecoder ;
@@ -34,13 +35,12 @@ public class NerRecognizer {
         nlpDecoder = new NLPDecoder();
         List<NLPComponent<NLPNode>> components = new ArrayList();
 
-        String modelPath = System.getProperty("user.dir") + "/models/ner/vi-ner.xz";
-        if (!new File(modelPath).exists()) throw new IOException("NerRecognizer: " + modelPath + " is not found!");
+        InputStream stream = getResourceStream(getClass().getClassLoader(), "ner/vi-ner.xz");
         GlobalLexica lexica = LexicalInitializer.initialize(true).initializeLexica();
         if(lexica != null) {
             components.add(lexica);
         }
-        components.add(NLPUtils.getComponent(modelPath));
+        components.add(NLPUtils.getComponent(stream));
         nlpDecoder.setComponents(components);
 
     }
