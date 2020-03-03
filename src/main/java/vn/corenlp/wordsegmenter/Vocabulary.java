@@ -1,11 +1,12 @@
 package vn.corenlp.wordsegmenter;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.HashSet;
 import java.util.Set;
+
+import static vn.Utils.getResourceStream;
 
 @SuppressWarnings("unchecked")
 public class Vocabulary {
@@ -13,11 +14,9 @@ public class Vocabulary {
     static {
         VN_DICT = new HashSet<String>();
         try {
-            String vocabPath = System.getProperty("user.dir") + "/models/wordsegmenter/vi-vocab";
-            if (!new File(vocabPath).exists())
-                throw new IOException("Vocabulary: " + vocabPath + " is not found!");
             //Vocabulary.class.getClassLoader().getResource("wordsegmenter/vi-vocab").getPath()
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(vocabPath));
+            InputStream stream = getResourceStream(Vocabulary.class.getClassLoader(), "wordsegmenter/vi-vocab");
+            ObjectInputStream ois = new ObjectInputStream(stream);
             VN_DICT = (Set<String>) ois.readObject();
             ois.close();
         }
