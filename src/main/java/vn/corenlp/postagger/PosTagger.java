@@ -3,15 +3,16 @@ package vn.corenlp.postagger;
 import marmot.morph.MorphTagger;
 import marmot.morph.Sentence;
 import marmot.morph.Word;
-
-import marmot.util.FileUtils;
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import static vn.Utils.getResourceStream;
+import static vn.Utils.loadFromInputStream;
 
 public class PosTagger {
     private static PosTagger posTagger = null;
@@ -19,9 +20,8 @@ public class PosTagger {
     public final static Logger LOGGER = Logger.getLogger(PosTagger.class);
     public PosTagger() throws IOException {
         LOGGER.info("Loading POS Tagging model");
-        String modelPath = System.getProperty("user.dir") + "/models/postagger/vi-tagger";
-        if (!new File(modelPath).exists()) throw new IOException("PosTagger: " + modelPath + " is not found!");
-        tagger = FileUtils.loadFromFile(modelPath);
+        InputStream stream = getResourceStream(getClass().getClassLoader(), "postagger/vi-tagger");
+        tagger = loadFromInputStream(stream);
 
     }
 
