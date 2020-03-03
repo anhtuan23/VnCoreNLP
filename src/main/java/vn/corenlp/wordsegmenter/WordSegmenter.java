@@ -3,14 +3,14 @@ package vn.corenlp.wordsegmenter;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static vn.Utils.getResourceStream;
 
 /**
  * @author DatQuocNguyen
@@ -22,23 +22,21 @@ public class WordSegmenter {
     public WordSegmenter()
             throws IOException {
         LOGGER.info("Loading Word Segmentation model");
-        String modelPath = System.getProperty("user.dir") + "/models/wordsegmenter/wordsegmenter.rdr";
-        if (!new File(modelPath).exists())
-            throw new IOException("WordSegmenter: " + modelPath + " is not found!");
-
-        this.constructTreeFromRulesFile(modelPath);
+        this.constructTreeFromRulesFile();
     }
 
     public static WordSegmenter initialize() throws IOException {
-        if(wordSegmenter == null) {
+        if (wordSegmenter == null) {
             wordSegmenter = new WordSegmenter();
         }
         return wordSegmenter;
     }
-    private void constructTreeFromRulesFile(String rulesFilePath)
+
+    private void constructTreeFromRulesFile()
             throws IOException {
+        InputStream stream = getResourceStream(getClass().getClassLoader(), "wordsegmenter/wordsegmenter.rdr");
         BufferedReader buffer = new BufferedReader(
-                new InputStreamReader(new FileInputStream(new File(rulesFilePath)), "UTF-8"));
+                new InputStreamReader(stream, "UTF-8"));
         String line = buffer.readLine();
 
         this.root = new Node(new FWObject(false), "NN", null, null, null, 0);
